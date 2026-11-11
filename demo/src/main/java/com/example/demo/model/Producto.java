@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -53,5 +52,8 @@ public class Producto {
     @Setter 
     private Set<Image> imagenes;
     
-    
+        @ManyToMany(mappedBy = "productos", fetch = FetchType.EAGER)
+    @JsonIgnore
+    @Setter
+    private Set<Department> deparments = new HashSet<>();
 }
