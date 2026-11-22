@@ -81,6 +81,9 @@ public interface categoriaRepo extends JpaRepository<Department, String> {
 
 Analiza el modelo `Department`. Observa las anotaciones `@ManyToMany` y `@JoinTable`. Responde: ¿Cómo afectará JPA a la base de datos? ¿Qué tabla creará y qué columnas tendrá?
 
+Creará la tabla `categorias` y una tabla intermedia llamada `producto_deparments`. Esa tabla tiene dos columnas, `product_id` y `deparments_id`, y cada fila une una categoría con un producto.
+
+
 ## Paso 2: Modificar el modelo principal
 
 1. En el archivo `demo/src/main/java/com/example/demo/model/Producto.java`, agrega la siguiente relación a la clase `Producto`:
@@ -92,6 +95,8 @@ Analiza el modelo `Department`. Observa las anotaciones `@ManyToMany` y `@JoinTa
     private Set<Department> deparments = new HashSet<>();
 ```
 2. Investiga qué significa la anotación `@JsonIgnore` y explica por qué crees que se utiliza en `Producto`.
+
+   Hace que ese campo no se muestre en la respuesta. Se usa en `Producto` para evitar que se repita sin fin: la categoría muestra sus productos y cada producto volvería a mostrar sus categorías.
 
 ## Diagrama de clases
 
@@ -235,7 +240,11 @@ public String deleteDeparment(@PathVariable String id) {
 Observa el endpoint `addProductoCategoria/{productId}/{categoriaId}`, analiza el código y responde:
 
 - ¿Cuál crees que es su función?
+
+  Une un producto con una categoría que ya existen. Busca los dos por su ID, agrega el producto a la categoría y guarda, por lo que se crea una fila nueva en la tabla intermedia.
 - ¿Por qué se declaran dos repositorios: uno de tipo `categoriaRepo` y otro de tipo `productoRepo`?
+
+  Porque cada repositorio solo maneja una tabla. El endpoint necesita buscar la categoría y también el producto, así que usa uno para cada uno.
 
 ## Endpoints del ejercicio
 
